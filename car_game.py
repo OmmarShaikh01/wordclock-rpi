@@ -41,13 +41,13 @@ class CarGame:
                 matrix[index] = (0, 0, 0)
             if item == self.CAR:
                 matrix[index] = (255, 0, 0)
-            if item == self.ONCOMEING_1:
+            if item == self.ONCOMEING:
                 matrix[index] = (random.randint(0, 200), random.randint(0, 255), random.randint(0, 255))
             if item == self.PAVEMENT:
                 matrix[index] = (0, 200, 200)
             if item == self.DIVIDER:
                 matrix[index] = (0, 200, 0)
-        return np.asarray(matrix).tolist()
+        return matrix
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
@@ -192,5 +192,5 @@ class CarGame:
             self.populate_car(self.main_car, self.CAR)
 
             self.check_game_over()
-            callable(self.matrix)
+            callable(self.getMatrix())
             time.sleep(1)
