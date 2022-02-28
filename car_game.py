@@ -20,7 +20,7 @@ class CarGame:
     CAR = 1
     ONCOMEING = 2
     PAVEMENT = 3
-    DIVIDER = 3
+    DIVIDER = 4
 
     def __init__(self, mqueue):
         self.matrix = np.zeros((16, 16))
@@ -38,16 +38,16 @@ class CarGame:
             matrix.extend(f)
         for index, item in enumerate(matrix):
             if item == self.EMPTY:
-                matrix[index] = (0, 0, 0)
+                matrix[index] = [128, 128, 128]
             if item == self.CAR:
-                matrix[index] = (255, 0, 0)
+                matrix[index] = [255, 0, 0]
             if item == self.ONCOMEING:
-                matrix[index] = (random.randint(0, 200), random.randint(0, 255), random.randint(0, 255))
+                matrix[index] = [random.randint(0, 200), random.randint(0, 255), random.randint(0, 255)]
             if item == self.PAVEMENT:
-                matrix[index] = (0, 200, 200)
+                matrix[index] = [0, 200, 200]
             if item == self.DIVIDER:
-                matrix[index] = (0, 200, 0)
-        return matrix
+                matrix[index] = [0, 200, 0]
+        return np.asarray(matrix, dtype = int).tolist()
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
