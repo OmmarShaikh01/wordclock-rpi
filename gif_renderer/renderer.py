@@ -79,5 +79,8 @@ class GifImageRenderer():
                                     event = self.mqueue.get()
                                     if event == BUTTON_Q:
                                         break
+                            else:
+                                continue
+                            break
                         time.sleep(1 / 24)
             time.sleep(1 / 8)

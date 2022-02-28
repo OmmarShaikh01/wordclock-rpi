@@ -18,15 +18,15 @@ BUTTON_E = 'e'
 class CarGame:
     EMPTY = 0
     CAR = 1
-    ONCOMEING_1 = 2
-    ONCOMEING_2 = 3
-    PAVEMENT = 4
+    ONCOMEING = 2
+    PAVEMENT = 3
+    DIVIDER = 3
 
     def __init__(self, mqueue):
         self.matrix = np.zeros((16, 16))
-        self.oncar_1, self.oncar_2 = None, None
-        self.main_car = None
         self.mqueue = mqueue
+        self.oncar = []
+        self.main_car = None
         self.game_over = False
 
     def getMatrix(self):
@@ -41,169 +41,132 @@ class CarGame:
                 matrix[index] = (0, 0, 0)
             if item == self.CAR:
                 matrix[index] = (255, 0, 0)
-            if item == self.ONCOMEING_1 or item == self.ONCOMEING_2:
+            if item == self.ONCOMEING_1:
                 matrix[index] = (random.randint(0, 200), random.randint(0, 255), random.randint(0, 255))
             if item == self.PAVEMENT:
                 matrix[index] = (0, 200, 200)
+            if item == self.DIVIDER:
+                matrix[index] = (0, 200, 0)
         return np.asarray(matrix).tolist()
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
-        self.generate_pavement()
+        self.generate_background()
 
     def end(self):
         self.game_over = True
         self.matrix = np.asarray(
-            (
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                (0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1),
-                (0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0),
-                (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1),
-                (0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0),
-                (0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1),
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                (0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1),
-                (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1),
-                (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1),
-                (0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0),
-                (0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1),
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            ),
-            dtype = float
+                (
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    (0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1),
+                    (0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0),
+                    (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1),
+                    (0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0),
+                    (0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1),
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    (0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1),
+                    (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1),
+                    (0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1),
+                    (0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0),
+                    (0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1),
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                ),
+                dtype = float
         )
         self.main_car = None
 
     def restart(self):
-        self.game_over = False
-        self.oncar_1, self.oncar_2 = None, None
+        self.oncar = []
         self.main_car = None
+        self.game_over = False
         self.clear()
         self.generate_car()
         self.generate_on_car()
 
-    def generate_pavement(self):
-        for row in range(16):
-            self.matrix[row][0] = self.PAVEMENT
-            self.matrix[row][15] = self.PAVEMENT
+    def generate_background(self):
+        self.matrix = np.asarray(
+                (
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 3, 3),
+                    (3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3)
+                ),
+                dtype = float
+        )
 
     def generate_car(self):
         if self.main_car is None:
-            cord_1, cord_2, cord_3 = (13, 7), (13 + 1, 7), (13 + 2, 7)
-            self.main_car = (cord_1, cord_2, cord_3)
+            col = random.choice((2, 3, 4, 6, 7, 8, 9, 11, 12, 13))
+            cord = ((14, col), (15, col))
+            self.main_car = cord
         self.populate_car(self.main_car, self.CAR)
 
     def move_car(self, direction):
-        cord_1, cord_2, cord_3 = self.main_car
-        row, col = cord_1[0], cord_1[1]
-        if direction == "LEFT":
-            if (col - 1) > 0:
-                cord_1, cord_2, cord_3 = (row, col - 1), (row + 1, col - 1), (row + 2, col - 1)
-                self.main_car = (cord_1, cord_2, cord_3)
-        elif direction == "RIGHT":
-            if (col + 1) < 14:
-                cord_1, cord_2, cord_3 = (row, col + 1), (row + 1, col + 1), (row + 2, col + 1)
-                self.main_car = (cord_1, cord_2, cord_3)
+        if self.main_car is None:
+            return None
+        val_col = (2, 3, 4, 6, 7, 8, 9, 11, 12, 13)
+        col = val_col.index(self.main_car[0][1])
+        if direction == "LEFT" and ((col - 1) in range(len(val_col))):
+            col -= 1
+            self.main_car = ((14, val_col[col]), (15, val_col[col]))
+        elif direction == "RIGHT" and ((col + 1) in range(len(val_col))):
+            col += 1
+            self.main_car = ((14, val_col[col]), (15, val_col[col]))
+
+        self.clear()
+        [self.populate_car(car, self.ONCOMEING) for car in self.oncar]
+        self.populate_car(self.main_car, self.CAR)
 
     def generate_on_car(self):
-        if self.oncar_1 is None:
-            row, col = 0, random.randint(1, 13)
-            if self.oncar_2 is not None:
-                temp_col = self.oncar_2[0][1]
-                if temp_col + 6 < 13:
-                    col = temp_col + 6
-                elif temp_col - 6 > 1:
-                    col = temp_col - 6
+        row = random.randint(0, 8)
+        if len(self.oncar) == 0:
+            val_col = random.choice((2, 3, 4, 6, 7, 8, 9, 11, 12, 13))
+            self.oncar = [((row, val_col), (row + 1, val_col))]
+        elif 0 < len(self.oncar) < 3:
+            cars_in = [(2, 3, 4), (6, 7, 8, 9), (11, 12, 13)]
+            for car in self.oncar:
+                for index, item in enumerate(cars_in):
+                    if car[0][1] in item:
+                        cars_in.pop(index)
+            val_col = random.choice(cars_in[0])
+            self.oncar.insert(len(self.oncar), ((row, val_col), (row + 1, val_col)))
 
-            cord_1, cord_2, cord_3 = (row, col), (row + 1, col), (row + 2, col)
-            self.populate_car((cord_1, cord_2, cord_3), self.ONCOMEING_1)
-            self.oncar_1 = (cord_1, cord_2, cord_3)
-        else:
-            self.move_on_car()
-            if self.oncar_1 is not None:
-                self.populate_car(self.oncar_1, self.ONCOMEING_1)
 
-        if self.oncar_2 is None:
-            row, col = 0, random.randint(1, 13)
-            if self.oncar_1 is not None:
-                temp_col = self.oncar_1[0][1]
-                if temp_col + 6 < 13:
-                    col = temp_col + 6
-                elif temp_col - 6 > 1:
-                    col = temp_col - 6
-            cord_1, cord_2, cord_3 = (row, col), (row + 1, col), (row + 2, col)
-            self.populate_car((cord_1, cord_2, cord_3), self.ONCOMEING_2)
-            self.oncar_2 = (cord_1, cord_2, cord_3)
-        else:
-            self.move_on_car()
-            if self.oncar_2 is not None:
-                self.populate_car(self.oncar_2, self.ONCOMEING_2)
+        [self.populate_car(car, self.ONCOMEING) for car in self.oncar]
 
     def move_on_car(self):
-        if self.oncar_1 is not None:
-            row, col = self.oncar_1[0][0], self.oncar_1[0][1]
-            if row + 4 <= 15:
-                row += 2
-                cord_1, cord_2, cord_3 = (row, col), (row + 1, col), (row + 2, col)
-                self.oncar_1 = (cord_1, cord_2, cord_3)
-            else:
-                self.oncar_1 = None
-
-        if self.oncar_2 is not None:
-            row, col = self.oncar_2[0][0], self.oncar_2[0][1]
-            if row + 4 <= 15:
-                row += 2
-                cord_1, cord_2, cord_3 = (row, col), (row + 1, col), (row + 2, col)
-                self.oncar_2 = (cord_1, cord_2, cord_3)
-            else:
-                self.oncar_2 = None
+        pass
 
     def populate_car(self, cord, value):
-        if cord:
-            cord_1, cord_2, cord_3 = cord
-            self.matrix[cord_1[0]][cord_1[1]] = value
-            self.matrix[cord_1[0]][cord_1[1] + 1] = value
-            self.matrix[cord_2[0]][cord_2[1]] = value
-            self.matrix[cord_2[0]][cord_2[1] + 1] = value
-            self.matrix[cord_3[0]][cord_3[1]] = value
-            self.matrix[cord_3[0]][cord_3[1] + 1] = value
+        if cord is not None:
+            for item in cord:
+                self.matrix[item[0]][item[1]] = value
 
     def check_game_over(self):
         if self.game_over:
             return self.end()
+        elif self.main_car and self.oncar:
+            for cordinates in [cord for cord in [car for car in self.oncar]]:
+                for item in self.main_car:
+                    if cordinates in item:
+                        return self.end()
         else:
-            cord_main_1, cord_main_2, cord_main_3 = self.main_car
-            main_intersection = (
-                cord_main_1,
-                cord_main_2,
-                cord_main_3,
-                (cord_main_1[0], cord_main_1[1] + 1),
-                (cord_main_2[0], cord_main_2[1] + 1),
-                (cord_main_3[0], cord_main_3[1] + 1)
-            )
-            if self.oncar_1 is not None:
-                cord_1_1, cord_1_2, cord_1_3 = self.oncar_1
-                intersection = (
-                    cord_1_1, (cord_1_1[0], cord_1_1[1] + 1),
-                    cord_1_2, (cord_1_2[0], cord_1_2[1] + 1),
-                    cord_1_3, (cord_1_3[0], cord_1_3[1] + 1)
-                )
-                for i in main_intersection:
-                    if i in intersection:
-                        self.end()
-
-            if self.oncar_2 is not None:
-                cord_1_1, cord_1_2, cord_1_3 = self.oncar_2
-                intersection = (
-                    cord_1_1, (cord_1_1[0], cord_1_1[1] + 1),
-                    cord_1_2, (cord_1_2[0], cord_1_2[1] + 1),
-                    cord_1_3, (cord_1_3[0], cord_1_3[1] + 1)
-                )
-                for i in main_intersection:
-                    if i in intersection:
-                        self.end()
+            return None
 
     def run(self, callable):
         counter = 0
@@ -212,18 +175,7 @@ class CarGame:
             if not self.game_over:
                 self.clear()
                 self.generate_car()
-                if counter == 4:
-                    counter = 0
-                    if self.oncar_1 is None or self.oncar_2 is None:
-                        self.generate_on_car()
-                else:
-                    if self.oncar_1 is not None:
-                        self.move_on_car()
-                        self.populate_car(self.oncar_1, self.ONCOMEING_1)
-                    if self.oncar_2 is not None:
-                        self.move_on_car()
-                        self.populate_car(self.oncar_2, self.ONCOMEING_2)
-                    counter += 1
+                self.generate_on_car()
 
             if not self.mqueue.empty():
                 event = self.mqueue.get()
@@ -240,5 +192,4 @@ class CarGame:
 
             self.check_game_over()
             callable(self.matrix)
-            callable()
             time.sleep(1)
