@@ -53,6 +53,7 @@ class GifImageRenderer():
         self.loaded_files = os.listdir(os.path.join(ROOT, "images"))
         link = ""
         while True:
+            self.clear()
             if not self.mqueue.empty():
                 event = self.mqueue.get()
                 if event == BUTTON_Q:
@@ -68,7 +69,7 @@ class GifImageRenderer():
                         if os.path.isfile(link) and ext in [".gif"]:
                             self.clear()
                             self.image = Image.open(link)
-                            seq = [frame.copy() for frame in ImageSequence.Iterator(image)]
+                            seq = [frame.copy() for frame in ImageSequence.Iterator(self.image)]
                             for frame in seq:
                                 frame = frame.convert('RGB')
                                 frame = frame.resize((16, 16))
