@@ -40,14 +40,14 @@ class GifImageRenderer():
             self.menu_scroll = len(self.loaded_files) - 1
         print("GIFImageRenderer", menu_scroll)
 
-    def getMatrix(self):
-        matrix_flipped = np.flip(self.matrix, 0)
+    def getMatrix(self, matrix):
+        matrix_flipped = np.flip(matrix, 0)
         alternate_rows, alternate_rows_flipped = matrix_flipped[0::2], np.flip(matrix_flipped[1::2], 1)
-        matrix = []
+        new_matrix = []
         for n, f in zip(alternate_rows, alternate_rows_flipped):
-            matrix.extend(n)
-            matrix.extend(f)
-        return np.asarray(matrix).tolist()
+            new_matrix.extend(n)
+            new_matrix.extend(f)
+        return np.asarray(new_matrix).tolist()
 
     def render(self, callback = None):
         self.loaded_files = os.listdir(os.path.join(ROOT, "images"))
@@ -70,12 +70,9 @@ class GifImageRenderer():
                         self.image = Image.open(link)
                     while True:
                         for frame in ImageSequence.Iterator(self.image):
-                            frame = frame.copy()
-                            frame = frame.convert('RGB')
-                            frame = frame.resize((16, 16))
-                            self.matrix = np.array(frame)
+                            frame = frame.copy().convert('RGB').resize((16, 16))
                             if callback is not None:
-                                callback(self.matrix)
+                                callback(self.getMatrix(np.array(frame)))
                             if not self.mqueue.empty():
                                 event = self.mqueue.get()
                                 if event == BUTTON_Q:

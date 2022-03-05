@@ -159,10 +159,10 @@ def mainloop():
 
 
 def mainloop_matrix():
-    try:
-        from pixel import MatrixController
-        controller = MatrixController()
+    from pixel import MatrixController
+    controller = MatrixController()
 
+    try:
         menu = Menu()
         activity_thread = threading.Thread(target = listner, daemon = False)
         activity_thread.start()
@@ -204,6 +204,7 @@ def mainloop_matrix():
                     continue
             time.sleep(1 / 8)
     except KeyboardInterrupt:
+        controller.clear()
         pass
 
 
