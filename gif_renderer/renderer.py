@@ -70,9 +70,8 @@ class GifImageRenderer():
                         self.image = Image.open(link)
                     while True:
                         for frame in ImageSequence.Iterator(self.image):
-                            frame = frame.copy().convert('RGB').resize((16, 16))
                             if callback is not None:
-                                callback(self.getMatrix(np.array(frame)))
+                                callback(self.getMatrix(np.array(frame.copy().convert('RGB').resize((16, 16)))))
                             if not self.mqueue.empty():
                                 event = self.mqueue.get()
                                 if event == BUTTON_Q:

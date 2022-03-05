@@ -91,31 +91,44 @@ def scroll_menu(direction):
     print("main", menu_scroll)
 
 
+# def listner():
+#     while True:
+#         if keyboard.is_pressed(BUTTON_Q):
+#             message_queue.put(BUTTON_Q)
+#         elif keyboard.is_pressed(BUTTON_W):
+#             message_queue.put(BUTTON_W)
+#         elif keyboard.is_pressed(BUTTON_E):
+#             message_queue.put(BUTTON_E)
+#         elif keyboard.is_pressed(BUTTON_A):
+#             message_queue.put(BUTTON_A)
+#         elif keyboard.is_pressed(BUTTON_S):
+#             message_queue.put(BUTTON_S)
+#         elif keyboard.is_pressed(BUTTON_D):
+#             message_queue.put(BUTTON_D)
+#         elif keyboard.is_pressed(BUTTON_Z):
+#             message_queue.put(BUTTON_Z)
+#         elif keyboard.is_pressed(BUTTON_X):
+#             message_queue.put(BUTTON_X)
+#         elif keyboard.is_pressed(BUTTON_C):
+#             message_queue.put(BUTTON_C)
+#         elif keyboard.is_pressed(BUTTON_V):
+#             message_queue.put(BUTTON_V)
+#         else:
+#             continue
+#         time.sleep(1 / 60)
+#
 def listner():
-    while True:
-        if keyboard.is_pressed(BUTTON_Q):
-            message_queue.put(BUTTON_Q)
-        elif keyboard.is_pressed(BUTTON_W):
-            message_queue.put(BUTTON_W)
-        elif keyboard.is_pressed(BUTTON_E):
-            message_queue.put(BUTTON_E)
-        elif keyboard.is_pressed(BUTTON_A):
-            message_queue.put(BUTTON_A)
-        elif keyboard.is_pressed(BUTTON_S):
-            message_queue.put(BUTTON_S)
-        elif keyboard.is_pressed(BUTTON_D):
-            message_queue.put(BUTTON_D)
-        elif keyboard.is_pressed(BUTTON_Z):
-            message_queue.put(BUTTON_Z)
-        elif keyboard.is_pressed(BUTTON_X):
-            message_queue.put(BUTTON_X)
-        elif keyboard.is_pressed(BUTTON_C):
-            message_queue.put(BUTTON_C)
-        elif keyboard.is_pressed(BUTTON_V):
-            message_queue.put(BUTTON_V)
-        else:
-            continue
-        time.sleep(1 / 8)
+    keyboard.add_hotkey(BUTTON_Q, lambda: message_queue.put(BUTTON_Q))
+    keyboard.add_hotkey(BUTTON_W, lambda: message_queue.put(BUTTON_W))
+    keyboard.add_hotkey(BUTTON_E, lambda: message_queue.put(BUTTON_E))
+    keyboard.add_hotkey(BUTTON_A, lambda: message_queue.put(BUTTON_A))
+    keyboard.add_hotkey(BUTTON_S, lambda: message_queue.put(BUTTON_S))
+    keyboard.add_hotkey(BUTTON_D, lambda: message_queue.put(BUTTON_D))
+    keyboard.add_hotkey(BUTTON_Z, lambda: message_queue.put(BUTTON_Z))
+    keyboard.add_hotkey(BUTTON_X, lambda: message_queue.put(BUTTON_X))
+    keyboard.add_hotkey(BUTTON_C, lambda: message_queue.put(BUTTON_C))
+    keyboard.add_hotkey(BUTTON_V, lambda: message_queue.put(BUTTON_V))
+    keyboard.wait()
 
 
 def mainloop():
