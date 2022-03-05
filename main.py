@@ -13,7 +13,7 @@ from snake_game import SnakeGame
 from car_game import CarGame
 from scroll_clock import TextRendererClock
 
-menu_scroll = 7
+menu_scroll = 1
 message_queue = queue.Queue()
 
 clock = Clock(message_queue)

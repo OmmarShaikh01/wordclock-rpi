@@ -63,25 +63,24 @@ class GifImageRenderer():
                 if event == BUTTON_S:
                     self.scroll_menu(1)
                 if event == BUTTON_E:
+                    link = os.path.join(ROOT, "images", self.loaded_files[self.menu_scroll])
+                    ext = os.path.splitext(link)[1]
+                    if os.path.isfile(link) and ext in [".gif"]:
+                        self.clear()
+                        self.image = Image.open(link)
                     while True:
-                        link = os.path.join(ROOT, "images", self.loaded_files[self.menu_scroll])
-                        ext = os.path.splitext(link)[1]
-                        if os.path.isfile(link) and ext in [".gif"]:
-                            self.clear()
-                            self.image = Image.open(link)
-                            seq = [frame.copy() for frame in ImageSequence.Iterator(self.image)]
-                            for frame in seq:
-                                frame = frame.convert('RGB')
-                                frame = frame.resize((16, 16))
-                                self.matrix = np.array(frame)
-                                if callback is not None:
-                                    callback(self.getMatrix())
-                                if not self.mqueue.empty():
-                                    event = self.mqueue.get()
-                                    if event == BUTTON_Q:
-                                        break
-                            else:
-                                continue
-                            break
-                        time.sleep(1 / 24)
+                        for frame in ImageSequence.Iterator(self.image):
+                            frame = frame.copy()
+                            frame = frame.convert('RGB')
+                            frame = frame.resize((16, 16))
+                            self.matrix = np.array(frame)
+                            if callback is not None:
+                                callback(self.matrix)
+                            if not self.mqueue.empty():
+                                event = self.mqueue.get()
+                                if event == BUTTON_Q:
+                                    break
+                        else:
+                            continue
+                        break
             time.sleep(1 / 8)
