@@ -34,7 +34,7 @@ class FlappyBird:
         self.mqueue = mqueue
         self.game_over = False
         self.bird_cord = [4, 0]
-        self.pipe_cord = [[11, 5, 3]]
+        self.pipe_cord = [[13, 5, 3]]
         self.back_matrix = itertools.cycle((np.zeros((16, 16)), np.zeros((16, 16))))
         self.bird_matrix = itertools.cycle((
             np.asarray(
@@ -129,7 +129,7 @@ class FlappyBird:
         interval = 9
         row = self.pipe_cord[0][0] + interval
         width = 3
-        if (0 < len(self.pipe_cord) < 2) and (9 <= row <= 11):
+        if (0 < len(self.pipe_cord) < 2) and (11 <= row <= 13):
             height = random.randint(0, 5)
             self.pipe_cord.append([row, height, width])
         else:
