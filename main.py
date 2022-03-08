@@ -11,9 +11,10 @@ from scroll_text import TextRenderer
 from weather import Weather
 from snake_game import SnakeGame
 from car_game import CarGame
+from flappy_game import FlappyBird
 from scroll_clock import TextRendererClock
 
-menu_scroll = 1
+menu_scroll = 0
 message_queue = queue.Queue()
 
 clock = Clock(message_queue)
@@ -24,6 +25,7 @@ weather = Weather(message_queue)
 snake = SnakeGame(message_queue)
 clock_renderer = TextRendererClock(message_queue)
 car_game = CarGame(message_queue)
+flappy_game = FlappyBird(message_queue)
 
 development = True
 
@@ -41,14 +43,15 @@ BUTTON_E = 'e'
 
 class Menu:
     ROWS = {
-        0: (1, 2, 8),
+        0: (2, 2, 8),
         1: (3, 2, 8),
-        2: (5, 2, 8),
-        3: (7, 2, 8),
-        4: (9, 2, 8),
-        5: (11, 2, 8),
-        6: (13, 2, 8),
-        7: (15, 2, 8),
+        2: (4, 2, 8),
+        3: (5, 2, 8),
+        4: (6, 2, 8),
+        5: (7, 2, 8),
+        6: (8, 2, 8),
+        7: (9, 2, 8),
+        8: (10, 2, 8),
     }
 
     def __init__(self) -> None:
@@ -81,7 +84,7 @@ class Menu:
 
 def scroll_menu(direction):
     global menu_scroll
-    rows = 7
+    rows = len(Menu.ROWS)
     if (menu_scroll + direction) > rows:
         menu_scroll = 0
     elif 0 <= (menu_scroll + direction) <= rows:
@@ -91,32 +94,6 @@ def scroll_menu(direction):
     print("main", menu_scroll)
 
 
-# def listner():
-#     while True:
-#         if keyboard.is_pressed(BUTTON_Q):
-#             message_queue.put(BUTTON_Q)
-#         elif keyboard.is_pressed(BUTTON_W):
-#             message_queue.put(BUTTON_W)
-#         elif keyboard.is_pressed(BUTTON_E):
-#             message_queue.put(BUTTON_E)
-#         elif keyboard.is_pressed(BUTTON_A):
-#             message_queue.put(BUTTON_A)
-#         elif keyboard.is_pressed(BUTTON_S):
-#             message_queue.put(BUTTON_S)
-#         elif keyboard.is_pressed(BUTTON_D):
-#             message_queue.put(BUTTON_D)
-#         elif keyboard.is_pressed(BUTTON_Z):
-#             message_queue.put(BUTTON_Z)
-#         elif keyboard.is_pressed(BUTTON_X):
-#             message_queue.put(BUTTON_X)
-#         elif keyboard.is_pressed(BUTTON_C):
-#             message_queue.put(BUTTON_C)
-#         elif keyboard.is_pressed(BUTTON_V):
-#             message_queue.put(BUTTON_V)
-#         else:
-#             continue
-#         time.sleep(1 / 60)
-#
 def listner():
     keyboard.add_hotkey(BUTTON_Q, lambda: message_queue.put(BUTTON_Q))
     keyboard.add_hotkey(BUTTON_W, lambda: message_queue.put(BUTTON_W))
@@ -161,6 +138,8 @@ def mainloop():
                         clock_renderer.render(print)
                     elif menu_scroll == 7:
                         car_game.run(print)
+                    elif menu_scroll == 8:
+                        flappy_game.run(print)
                 elif event == (BUTTON_S):
                     scroll_menu(1)
                     menu.renderMenu(menu_scroll, print)
@@ -203,11 +182,14 @@ def mainloop_matrix():
                     elif menu_scroll == 4:
                         weather.render(lambda mat: controller.populateBoolean(mat, (255, 255, 0)))
                     elif menu_scroll == 5:
-                        snake.run(lambda mat: controller.populateMapped(mat, {0: (0, 0, 0), 1: (255, 0, 0), 2: (0, 255, 0)}))
+                        snake.run(
+                            lambda mat: controller.populateMapped(mat, {0: (0, 0, 0), 1: (255, 0, 0), 2: (0, 255, 0)}))
                     elif menu_scroll == 6:
                         clock_renderer.render(lambda mat: controller.populateBoolean(mat, (255, 255, 0)))
                     elif menu_scroll == 7:
                         car_game.run(controller.populateRGB)
+                    elif menu_scroll == 8:
+                        flappy_game.run(controller.populateRGB)
                 elif event == (BUTTON_S):
                     scroll_menu(1)
                     menu.renderMenu(menu_scroll, (
