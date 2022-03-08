@@ -20,7 +20,7 @@ BUTTON_E = 'e'
 class FlappyBird:
     EMPTY = 0
 
-    BIRD_WING = 1
+    BIRD_EYE = 1
     BIRD_HEAD = 2
     BIRD_BEAK = 3
     BIRD_BODY = 4
@@ -40,7 +40,7 @@ class FlappyBird:
             np.asarray(
                     [
                         [self.EMPTY, self.BIRD_HEAD, self.BIRD_HEAD, self.EMPTY],
-                        [self.EMPTY, self.BIRD_HEAD, self.EMPTY, self.BIRD_BEAK],
+                        [self.EMPTY, self.BIRD_HEAD, self.BIRD_EYE, self.BIRD_BEAK],
                         [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.EMPTY],
                         [self.BIRD_BODY, self.BIRD_BODY, self.EMPTY, self.EMPTY]
                     ]
@@ -64,9 +64,9 @@ class FlappyBird:
 
         color_map = {
             self.EMPTY: (0, 0, 0),
-            self.BIRD_WING: (230,230,250),
+            self.BIRD_EYE: (230, 230, 250),
             self.BIRD_HEAD: (0, 0, 0),
-            self.BIRD_BEAK: (255,0,0),
+            self.BIRD_BEAK: (255, 0, 0),
             self.BIRD_BODY: (255, 255, 0),
             self.PIPE: (102, 255, 51),
             self.PAVEMENT: (102, 255, 51),
