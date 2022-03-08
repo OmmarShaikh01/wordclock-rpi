@@ -42,7 +42,7 @@ class FlappyBird:
                         [self.EMPTY, self.BIRD_HEAD, self.BIRD_HEAD, self.EMPTY],
                         [self.EMPTY, self.BIRD_HEAD, self.EMPTY, self.BIRD_BEAK],
                         [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.EMPTY],
-                        [self.EMPTY, self.BIRD_BODY, self.BIRD_BODY, self.EMPTY]
+                        [self.BIRD_BODY, self.BIRD_BODY, self.EMPTY, self.EMPTY]
                     ]
             ),
             np.asarray(
@@ -63,7 +63,7 @@ class FlappyBird:
             matrix.extend(f)
 
         color_map = {
-            self.EMPTY: (0, 0, random.randint(100, 255)),
+            self.EMPTY: (0, 0, 0),
             self.BIRD_WING: (0, 0, random.randint(100, 255)),
             self.BIRD_HEAD: (0, 0, random.randint(100, 255)),
             self.BIRD_BEAK: (0, 0, random.randint(100, 255)),
