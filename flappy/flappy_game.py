@@ -1,6 +1,7 @@
 import copy
 import enum
 import itertools
+import os.path
 import random
 import time
 import numpy as np
@@ -15,6 +16,8 @@ BUTTON_C = 'c'
 BUTTON_V = 'v'
 BUTTON_Q = 'q'
 BUTTON_E = 'e'
+
+PARENT = os.path.dirname(__file__)
 
 
 class FlappyBird:
@@ -35,7 +38,24 @@ class FlappyBird:
         self.game_over = False
         self.bird_cord = [4, 0]
         self.pipe_cord = [[13, 5, 3]]
-        self.back_matrix = itertools.cycle((np.zeros((16, 16)), np.zeros((16, 16))))
+        self.back_matrix = itertools.cycle((
+            os.path.join(PARENT, "images", "1.png"),
+            os.path.join(PARENT, "images", "2.png"),
+            os.path.join(PARENT, "images", "3.png"),
+            os.path.join(PARENT, "images", "4.png"),
+            os.path.join(PARENT, "images", "5.png"),
+            os.path.join(PARENT, "images", "6.png"),
+            os.path.join(PARENT, "images", "7.png"),
+            os.path.join(PARENT, "images", "8.png"),
+            os.path.join(PARENT, "images", "9.png"),
+            os.path.join(PARENT, "images", "10.png"),
+            os.path.join(PARENT, "images", "11.png"),
+            os.path.join(PARENT, "images", "12.png"),
+            os.path.join(PARENT, "images", "13.png"),
+            os.path.join(PARENT, "images", "14.png"),
+            os.path.join(PARENT, "images", "15.png"),
+            os.path.join(PARENT, "images", "16.png"),
+        ))
         self.bird_matrix = itertools.cycle((
             np.asarray(
                     [
@@ -78,6 +98,15 @@ class FlappyBird:
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
+        link = next(self.back_matrix)
+        if os.path.isfile(link) and ext in [".jpeg", ".png"]:
+            self.clear()
+            image = Image.open(link)
+            image = image.convert('RGB')
+            image = image.resize((16, 16))
+            self.matrix = np.array(image)
+        else:
+            self.matrix = np.zeros((16, 16))
 
     def end(self):
         self.game_over = True
