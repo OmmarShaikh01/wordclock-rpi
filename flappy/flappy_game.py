@@ -1,10 +1,14 @@
 import copy
 import enum
 import itertools
-import os.path
+import os
 import random
 import time
+import sys
+
 import numpy as np
+from colorsys import hsv_to_rgb
+from PIL import Image, ImageDraw, ImageFont
 
 BUTTON_W = 'w'
 BUTTON_S = 's'
@@ -31,6 +35,7 @@ class FlappyBird:
     PAVEMENT = 6
 
     GAME_OVER = 7
+    SCORE = 8
 
     def __init__(self, mqueue):
         self.matrix = np.zeros((16, 16))
@@ -38,6 +43,7 @@ class FlappyBird:
         self.game_over = False
         self.bird_cord = [4, 0]
         self.pipe_cord = [[13, 5, 3]]
+        self.score = 0
         self.back_matrix = itertools.cycle((
             os.path.join(PARENT, "images", "1.png"),
             os.path.join(PARENT, "images", "2.png"),
@@ -91,6 +97,7 @@ class FlappyBird:
             self.PIPE: (102, 255, 51),
             self.PAVEMENT: (102, 255, 51),
             self.GAME_OVER: (255, 0, 102),
+            self.SCORE: (255, 200, 102),
         }
         for index, item in enumerate(matrix):
             matrix[index] = color_map.get(item, (0, 0, 0))
@@ -172,6 +179,7 @@ class FlappyBird:
                         self.pipe_cord[index] = [col - 1, h1, width]
                     else:
                         self.pipe_cord.pop(0)
+                        self.score += 1
         self.drawPipe(width)
 
     def drawPipe(self, width = 3):
@@ -188,6 +196,7 @@ class FlappyBird:
     def restart(self):
         self.game_over = False
         self.bird_cord = [4, 0]
+        self.score = 0
         self.clear()
 
     def check_game_over(self):
@@ -209,6 +218,41 @@ class FlappyBird:
 
         if row_collis and col_collis:
             self.end()
+
+    def scrollText(self, text):
+        text = list(str(text))
+        renderscore_matrix = np.zeros((5, 6))
+        scorematrix = {
+            0: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            1: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            2: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            3: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            4: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            5: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            6: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            7: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            8: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            9: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+        }
+
+        number = scorematrix.get(int(text[0]), scorematrix.get(0))
+        matrix_x = 11
+        for row in (number):
+            matrix_y = 10
+            for col in (row):
+                self.matrix[matrix_x][matrix_y] = col
+                matrix_y += 1
+            matrix_x += 1
+
+        if 1 < len(text) <= 2:
+            number = scorematrix.get(int(text[1]), scorematrix.get(0))
+            matrix_x = 11
+            for row in (number):
+                matrix_y = 13
+                for col in (row):
+                    self.matrix[matrix_x][matrix_y] = col
+                    matrix_y += 1
+                matrix_x += 1
 
     def run(self, callable):
         self.restart()
@@ -233,6 +277,8 @@ class FlappyBird:
             self.drawBird()
 
             self.movePipe()
+
+            self.scrollText(self.score)
 
             self.check_game_over()
             callable(self.getMatrix())
