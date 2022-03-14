@@ -36,6 +36,8 @@ class FlappyBird:
 
     GAME_OVER = 7
     SCORE = 8
+    CLOUD_BLUE = 9
+    CLOUD_WHITE = 10
 
     def __init__(self, mqueue):
         self.matrix = np.zeros((16, 16))
@@ -61,6 +63,14 @@ class FlappyBird:
             os.path.join(PARENT, "images", "14.png"),
             os.path.join(PARENT, "images", "15.png"),
             os.path.join(PARENT, "images", "16.png"),
+            os.path.join(PARENT, "images", "17.png"),
+            os.path.join(PARENT, "images", "18.png"),
+            os.path.join(PARENT, "images", "19.png"),
+            os.path.join(PARENT, "images", "20.png"),
+            os.path.join(PARENT, "images", "21.png"),
+            os.path.join(PARENT, "images", "22.png"),
+            os.path.join(PARENT, "images", "23.png"),
+            os.path.join(PARENT, "images", "24.png"),
         ))
         self.bird_matrix = itertools.cycle((
             np.asarray(
@@ -98,6 +108,8 @@ class FlappyBird:
             self.PAVEMENT: (102, 255, 51),
             self.GAME_OVER: (255, 0, 102),
             self.SCORE: (255, 200, 102),
+            self.CLOUD_BLUE: (0, 130, 255),
+            self.CLOUD_WHITE: (255, 255, 255),
         }
         for index, item in enumerate(matrix):
             matrix[index] = color_map.get(item, (0, 0, 0))
@@ -105,15 +117,18 @@ class FlappyBird:
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
-        link = next(self.back_matrix)
+        link = os.path.normpath(next(self.back_matrix))
+        ext = os.path.splitext(link)[1]
         if os.path.isfile(link) and ext in [".jpeg", ".png"]:
-            self.clear()
             image = Image.open(link)
             image = image.convert('RGB')
             image = image.resize((16, 16))
-            self.matrix = np.array(image)
-        else:
-            self.matrix = np.zeros((16, 16))
+            for r_i, r in enumerate(np.array(image)):
+                for c_i, c in enumerate(r):
+                    if (c[0], c[1], c[2]) == (0, 130, 255):
+                        self.matrix[r_i][c_i] = self.CLOUD_BLUE
+                    else:
+                        self.matrix[r_i][c_i] = self.CLOUD_WHITE
 
     def end(self):
         self.game_over = True
@@ -274,12 +289,10 @@ class FlappyBird:
 
             if not bird_moved:
                 self.moveBird("DOWN")
+
             self.drawBird()
-
             self.movePipe()
-
             self.scrollText(self.score)
-
             self.check_game_over()
-            callable(self.getMatrix())
+            callable(self.matrix)
             time.sleep(1)

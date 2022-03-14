@@ -11,7 +11,7 @@ from scroll_text import TextRenderer
 from weather import Weather
 from snake_game import SnakeGame
 from car_game import CarGame
-from wordclock.flappy.flappy_game import FlappyBird
+from flappy.flappy_game import FlappyBird
 from scroll_clock import TextRendererClock
 
 menu_scroll = 8
