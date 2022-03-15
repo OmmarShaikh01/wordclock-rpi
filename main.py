@@ -14,7 +14,7 @@ from car_game import CarGame
 from flappy.flappy_game import FlappyBird
 from scroll_clock import TextRendererClock
 
-menu_scroll = 8
+menu_scroll = 0
 message_queue = queue.Queue()
 
 clock = Clock(message_queue)
