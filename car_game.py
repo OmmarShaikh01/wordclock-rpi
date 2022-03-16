@@ -153,29 +153,6 @@ class CarGame:
             col += 1
             self.main_car = ((14, val_col[col]), (15, val_col[col]))
 
-    # def generate_on_car(self):
-    #     row = 0
-    #     if len(self.oncar) == 0:
-    #         val_col = random.choice((2, 3, 4, 6, 7, 8, 9, 11, 12, 13))
-    #         self.oncar = [((row, val_col), (row + 1, val_col))]
-    #     elif 0 < len(self.oncar) < 3:
-    #         cars_in = [(2, 3, 4), (6, 7, 8, 9), (11, 12, 13)]
-    #         for car in self.oncar:
-    #             for index, item in enumerate(cars_in):
-    #                 if car[0][1] in item:
-    #                     cars_in.pop(index)
-    #         val_col = random.choice(cars_in[0])
-    #         self.oncar.insert(len(self.oncar), ((row, val_col), (row + 1, val_col)))
-    #
-    # def move_on_car(self):
-    #     for index, car in enumerate(self.oncar):
-    #         row, col = car[1][0], car[1][1]
-    #         cord = ((row, col), (row + 1, col))
-    #         if (row + 1) < 16:
-    #             self.oncar[index] = cord
-    #         else:
-    #             self.oncar.pop(index)
-
     def generate_on_car(self):
         row = 0
         if len(self.oncar) == 0:

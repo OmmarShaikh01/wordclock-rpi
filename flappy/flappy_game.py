@@ -75,45 +75,103 @@ class FlappyBird:
         self.bird_matrix = itertools.cycle((
             np.asarray(
                     [
-                        [self.EMPTY, self.BIRD_HEAD, self.BIRD_HEAD, self.EMPTY],
-                        [self.EMPTY, self.BIRD_HEAD, self.BIRD_EYE, self.BIRD_BEAK],
-                        [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.EMPTY],
-                        [self.BIRD_BODY, self.BIRD_BODY, self.EMPTY, self.EMPTY]
+                        [self.CLOUD_BLUE, self.BIRD_HEAD, self.BIRD_HEAD, self.CLOUD_BLUE],
+                        [self.CLOUD_BLUE, self.BIRD_HEAD, self.BIRD_EYE, self.BIRD_BEAK],
+                        [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.CLOUD_BLUE],
+                        [self.BIRD_BODY, self.BIRD_BODY, self.CLOUD_BLUE, self.CLOUD_BLUE]
                     ]
             ),
             np.asarray(
                     [
-                        [self.EMPTY, self.BIRD_HEAD, self.BIRD_HEAD, self.EMPTY],
-                        [self.EMPTY, self.BIRD_HEAD, self.EMPTY, self.BIRD_BEAK],
-                        [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.EMPTY],
-                        [self.EMPTY, self.EMPTY, self.EMPTY, self.EMPTY]
+                        [self.CLOUD_BLUE, self.BIRD_HEAD, self.BIRD_HEAD, self.CLOUD_BLUE],
+                        [self.CLOUD_BLUE, self.BIRD_HEAD, self.CLOUD_BLUE, self.BIRD_BEAK],
+                        [self.BIRD_BODY, self.BIRD_BODY, self.BIRD_BODY, self.CLOUD_BLUE],
+                        [self.CLOUD_BLUE, self.CLOUD_BLUE, self.CLOUD_BLUE, self.CLOUD_BLUE]
                     ]
             )))
 
     def getMatrix(self):
-        matrix_flipped = np.flip(self.matrix, 0)
-        alternate_rows, alternate_rows_flipped = matrix_flipped[0::2], np.flip(matrix_flipped[1::2], 1)
-        matrix = []
-        for n, f in zip(alternate_rows, alternate_rows_flipped):
-            matrix.extend(n)
-            matrix.extend(f)
+        if not self.game_over:
+            matrix_flipped = np.flip(self.matrix, 0)
+            alternate_rows, alternate_rows_flipped = matrix_flipped[0::2], np.flip(matrix_flipped[1::2], 1)
+            matrix = []
+            for n, f in zip(alternate_rows, alternate_rows_flipped):
+                matrix.extend(n)
+                matrix.extend(f)
 
-        color_map = {
-            self.EMPTY: (0, 0, 0),
-            self.BIRD_EYE: (230, 230, 250),
-            self.BIRD_HEAD: (0, 0, 0),
-            self.BIRD_BEAK: (255, 0, 0),
-            self.BIRD_BODY: (255, 255, 0),
-            self.PIPE: (102, 255, 51),
-            self.PAVEMENT: (102, 255, 51),
-            self.GAME_OVER: (255, 0, 102),
-            self.SCORE: (255, 200, 102),
-            self.CLOUD_BLUE: (0, 130, 255),
-            self.CLOUD_WHITE: (255, 255, 255),
-        }
-        for index, item in enumerate(matrix):
-            matrix[index] = color_map.get(item, (0, 0, 0))
-        return np.asarray(matrix, dtype = int).tolist()
+            color_map = {
+                self.EMPTY: (0, 0, 0),
+                self.BIRD_EYE: (230, 230, 250),
+                self.BIRD_HEAD: (0, 0, 0),
+                self.BIRD_BEAK: (255, 0, 0),
+                self.BIRD_BODY: (255, 255, 0),
+                self.PIPE: (102, 255, 51),
+                self.PAVEMENT: (102, 255, 51),
+                self.GAME_OVER: (255, 0, 102),
+                self.SCORE: (255, 200, 102),
+                self.CLOUD_BLUE: (0, 130, 255),
+                self.CLOUD_WHITE: (255, 255, 255),
+            }
+            for index, item in enumerate(matrix):
+                matrix[index] = color_map.get(item, (0, 0, 0))
+            return np.asarray(matrix, dtype = int).tolist()
+        else:
+            self.matrix = np.zeros((16, 16))
+            if not hasattr(self, "game_over_matrix"):
+                self.game_over_matrix = itertools.cycle((
+                    os.path.join(PARENT, "images", "game over1.png"),
+                    os.path.join(PARENT, "images", "game over2.png"),
+                    os.path.join(PARENT, "images", "game over3.png"),
+                    os.path.join(PARENT, "images", "game over4.png"),
+                    os.path.join(PARENT, "images", "game over5.png"),
+                    os.path.join(PARENT, "images", "game over6.png"),
+                    os.path.join(PARENT, "images", "game over7.png"),
+                    os.path.join(PARENT, "images", "game over8.png"),
+                    os.path.join(PARENT, "images", "game over9.png"),
+                    os.path.join(PARENT, "images", "game over10.png"),
+                    os.path.join(PARENT, "images", "game over11.png"),
+                    os.path.join(PARENT, "images", "game over12.png"),
+                    os.path.join(PARENT, "images", "game over13.png"),
+                    os.path.join(PARENT, "images", "game over14.png"),
+                    os.path.join(PARENT, "images", "game over14.png"),
+                    os.path.join(PARENT, "images", "game over15.png"),
+                    os.path.join(PARENT, "images", "game over16.png"),
+                    os.path.join(PARENT, "images", "game over17.png"),
+                    os.path.join(PARENT, "images", "game over18.png"),
+                    os.path.join(PARENT, "images", "game over19.png"),
+                    os.path.join(PARENT, "images", "game over20.png"),
+                    os.path.join(PARENT, "images", "game over21.png"),
+                    os.path.join(PARENT, "images", "game over22.png"),
+                    os.path.join(PARENT, "images", "game over23.png"),
+                    os.path.join(PARENT, "images", "game over24.png"),
+                    os.path.join(PARENT, "images", "game over25.png"),
+                    os.path.join(PARENT, "images", "game over26.png"),
+                    os.path.join(PARENT, "images", "game over27.png"),
+                    os.path.join(PARENT, "images", "game over28.png"),
+                    os.path.join(PARENT, "images", "game over30.png"),
+                    os.path.join(PARENT, "images", "game over31.png"),
+                    os.path.join(PARENT, "images", "game over32.png"),
+                    os.path.join(PARENT, "images", "game over33.png"),
+                    os.path.join(PARENT, "images", "game over34.png"),
+                    os.path.join(PARENT, "images", "game over35.png"),
+                    os.path.join(PARENT, "images", "game over36.png"),
+                    os.path.join(PARENT, "images", "game over37.png"),
+                    os.path.join(PARENT, "images", "game over38.png"),
+                    os.path.join(PARENT, "images", "game over39.png"),
+                ))
+            link = os.path.normpath(next(self.game_over_matrix))
+            ext = os.path.splitext(link)[1]
+            if os.path.isfile(link) and ext in [".jpeg", ".png"]:
+                image = Image.open(link)
+                image = image.convert('RGB')
+                image = image.resize((16, 16))
+                matrix_flipped = np.flip(np.array(image), 0)
+                alternate_rows, alternate_rows_flipped = matrix_flipped[0::2], np.flip(matrix_flipped[1::2], 1)
+                matrix = []
+                for n, f in zip(alternate_rows, alternate_rows_flipped):
+                    matrix.extend(n.tolist())
+                    matrix.extend(f.tolist())
+                return np.asarray(matrix, dtype = int).tolist()
 
     def clear(self):
         self.matrix = np.zeros((16, 16))
@@ -132,32 +190,6 @@ class FlappyBird:
 
     def end(self):
         self.game_over = True
-        if not hasattr(self, "game_over_matrix"):
-            self.game_over_matrix = itertools.cycle((
-                np.asarray(
-                        (
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                            (0, 7, 7, 7, 0, 7, 7, 7, 0, 7, 0, 7, 0, 7, 7, 7),
-                            (0, 7, 0, 0, 0, 7, 0, 7, 0, 7, 7, 7, 0, 7, 0, 0),
-                            (0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 7, 7),
-                            (0, 7, 0, 7, 0, 7, 7, 7, 0, 7, 0, 7, 0, 7, 0, 0),
-                            (0, 7, 7, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 7, 7),
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                            (0, 7, 7, 7, 0, 7, 0, 7, 0, 7, 7, 7, 0, 7, 7, 7),
-                            (0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 7, 0, 7),
-                            (0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 7, 7, 0, 7, 7, 7),
-                            (0, 7, 0, 7, 0, 0, 7, 0, 0, 7, 0, 0, 0, 7, 7, 0),
-                            (0, 7, 7, 7, 0, 0, 7, 0, 0, 7, 7, 7, 0, 7, 0, 7),
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-                        ),
-                        dtype = float
-                ),
-                np.zeros((16, 16))
-            ))
-        self.matrix = copy.deepcopy(next(self.game_over_matrix))
 
     def drawBird(self):
         bird = copy.deepcopy(next(self.bird_matrix))
@@ -239,15 +271,15 @@ class FlappyBird:
         renderscore_matrix = np.zeros((5, 6))
         scorematrix = {
             0: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            1: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            2: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            3: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            4: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            5: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            6: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            7: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            1: ((0, 8, 0), (0, 8, 0), (0, 8, 0), (0, 8, 0), (0, 8, 0)),
+            2: ((8, 8, 8), (0, 0, 8), (8, 8, 8), (8, 0, 0), (8, 8, 8)),
+            3: ((8, 8, 8), (0, 0, 8), (8, 8, 8), (0, 0, 8), (8, 8, 8)),
+            4: ((8, 0, 8), (8, 0, 8), (8, 8, 8), (0, 0, 8), (0, 0, 8)),
+            5: ((8, 8, 8), (8, 0, 0), (8, 8, 8), (0, 0, 8), (8, 8, 8)),
+            6: ((8, 8, 8), (8, 0, 0), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            7: ((8, 8, 8), (0, 0, 8), (0, 0, 8), (0, 0, 8), (0, 0, 8)),
             8: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
-            9: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (8, 0, 8), (8, 8, 8)),
+            9: ((8, 8, 8), (8, 0, 8), (8, 8, 8), (0, 0, 8), (0, 0, 8)),
         }
 
         number = scorematrix.get(int(text[0]), scorematrix.get(0))
@@ -294,5 +326,5 @@ class FlappyBird:
             self.movePipe()
             self.scrollText(self.score)
             self.check_game_over()
-            callable(self.matrix)
+            callable(self.getMatrix())
             time.sleep(1)
